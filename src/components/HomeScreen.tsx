@@ -43,7 +43,6 @@ export function HomeScreen({
 }) {
     const now = useNow();
     const [view, setView] = useState<View>('status');
-    const [tab, setTab] = useState<DelayCategory>(current?.category ?? 'working');
     const [confirm, setConfirm] = useState<DelayCode | null>(null);
     const [askLogout, setAskLogout] = useState(false);
     // Posisi unit dari alat GPS-nya, bukan dari tablet.
@@ -58,9 +57,8 @@ export function HomeScreen({
     const duty = bootstrap?.duty;
     const prod = bootstrap?.production;
     const tone = current ? TONE[CATEGORY[current.category].tone] : null;
-    const codes = byCategory[tab];
-    // Tombol dibagi rata ke tinggi yang ada: 3 kolom, baris secukupnya.
-    const rows = Math.max(2, Math.ceil(codes.length / 3));
+    // Semua tombol tampil sekaligus: satu kolom per kategori, tinggi tombol sama di semua kolom.
+    const rows = Math.max(1, ...CATEGORY_ORDER.map((c) => byCategory[c].length));
 
     const press = (c: DelayCode) => {
         if (c.code === current?.delayCode) return;
@@ -162,48 +160,39 @@ export function HomeScreen({
                 {view === 'lokasi' ? (
                     <LocationView bootstrap={bootstrap} pos={pos} online={online} now={now} />
                 ) : (
-                    <section className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-3">
-                        <div className="grid grid-cols-4 gap-2" role="tablist">
-                            {CATEGORY_ORDER.map((c) => {
-                                const t = TONE[CATEGORY[c].tone];
-                                return (
-                                    <button
-                                        key={c}
-                                        role="tab"
-                                        aria-selected={tab === c}
-                                        onClick={() => setTab(c)}
-                                        className={cn(
-                                            'min-h-14 rounded-xl px-2 text-center text-[clamp(0.9rem,1.9vh,1.15rem)] font-bold leading-tight transition active:scale-95',
-                                            tab === c ? t.solid : `bg-panel ${t.text}`,
-                                        )}
-                                    >
-                                        {CATEGORY[c].label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                        <div className="grid min-h-0 grid-cols-3 gap-3" style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}>
-                            {codes.map((c) => {
-                                const t = TONE[CATEGORY[c.category].tone];
-                                const active = c.code === current?.delayCode;
-                                return (
-                                    <button
-                                        key={c.code}
-                                        type="button"
-                                        onClick={() => press(c)}
-                                        aria-pressed={active}
-                                        className={cn(
-                                            'flex min-h-0 flex-col items-start justify-between gap-1 overflow-hidden rounded-2xl p-3 text-left transition active:scale-[0.97]',
-                                            active ? `${t.solid} ring-4 ${t.ring}` : 'bg-panel hover:bg-panel-2',
-                                        )}
-                                    >
-                                        <DelayIcon name={c.icon} className={cn('size-[clamp(1.5rem,4vh,2.5rem)] shrink-0', active ? '' : t.text)} />
-                                        <span className="text-[clamp(1rem,2.4vh,1.5rem)] font-bold leading-tight">{c.name}</span>
-                                    </button>
-                                );
-                            })}
-                            {codes.length === 0 && <p className="col-span-3 text-muted">Belum ada delay code di kategori ini.</p>}
-                        </div>
+                    <section className="grid min-h-0 grid-cols-2 grid-rows-2 gap-3 lg:grid-cols-4 lg:grid-rows-1">
+                        {CATEGORY_ORDER.map((cat) => {
+                            const t = TONE[CATEGORY[cat].tone];
+                            const list = byCategory[cat];
+                            return (
+                                <div key={cat} className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-2">
+                                    <p className={cn('truncate text-center text-[clamp(0.8rem,1.7vh,1rem)] font-bold uppercase tracking-wide', t.text)}>
+                                        {CATEGORY[cat].label}
+                                    </p>
+                                    <div className="grid min-h-0 gap-2" style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}>
+                                        {list.map((c) => {
+                                            const active = c.code === current?.delayCode;
+                                            return (
+                                                <button
+                                                    key={c.code}
+                                                    type="button"
+                                                    onClick={() => press(c)}
+                                                    aria-pressed={active}
+                                                    className={cn(
+                                                        'flex min-h-0 items-center gap-2 overflow-hidden rounded-xl px-3 text-left transition active:scale-[0.97]',
+                                                        active ? `${t.solid} ring-4 ${t.ring}` : `bg-panel hover:bg-panel-2 border-l-4 ${t.border}`,
+                                                    )}
+                                                >
+                                                    <DelayIcon name={c.icon} className={cn('size-[clamp(1.25rem,3.2vh,2rem)] shrink-0', active ? '' : t.text)} />
+                                                    <span className="line-clamp-2 text-[clamp(0.95rem,2.1vh,1.35rem)] font-bold leading-tight">{c.name}</span>
+                                                </button>
+                                            );
+                                        })}
+                                        {list.length === 0 && <p className="text-sm text-muted">Belum ada kode.</p>}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </section>
                 )}
             </div>

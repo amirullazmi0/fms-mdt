@@ -20,11 +20,11 @@ export const STATUS_LABEL: Record<UnitStatus, string> = {
 export type Tone = 'working' | 'planned' | 'unplanned' | 'breakdown';
 
 // Kelas warna per kategori (gelap, kontras tinggi untuk di kabin).
-export const TONE: Record<Tone, { solid: string; soft: string; ring: string; text: string }> = {
-    working: { solid: 'bg-emerald-500 text-emerald-950', soft: 'bg-emerald-500/15 text-emerald-300', ring: 'ring-emerald-400', text: 'text-emerald-400' },
-    planned: { solid: 'bg-sky-500 text-sky-950', soft: 'bg-sky-500/15 text-sky-300', ring: 'ring-sky-400', text: 'text-sky-400' },
-    unplanned: { solid: 'bg-amber-400 text-amber-950', soft: 'bg-amber-400/15 text-amber-200', ring: 'ring-amber-300', text: 'text-amber-300' },
-    breakdown: { solid: 'bg-red-500 text-red-950', soft: 'bg-red-500/15 text-red-300', ring: 'ring-red-400', text: 'text-red-400' },
+export const TONE: Record<Tone, { solid: string; soft: string; ring: string; text: string; border: string }> = {
+    working: { solid: 'bg-emerald-500 text-emerald-950', soft: 'bg-emerald-500/15 text-emerald-300', ring: 'ring-emerald-400', text: 'text-emerald-400', border: 'border-emerald-400' },
+    planned: { solid: 'bg-sky-500 text-sky-950', soft: 'bg-sky-500/15 text-sky-300', ring: 'ring-sky-400', text: 'text-sky-400', border: 'border-sky-400' },
+    unplanned: { solid: 'bg-amber-400 text-amber-950', soft: 'bg-amber-400/15 text-amber-200', ring: 'ring-amber-300', text: 'text-amber-300', border: 'border-amber-300' },
+    breakdown: { solid: 'bg-red-500 text-red-950', soft: 'bg-red-500/15 text-red-300', ring: 'ring-red-400', text: 'text-red-400', border: 'border-red-400' },
 };
 
 export const UNIT_TYPE: Record<string, string> = {
