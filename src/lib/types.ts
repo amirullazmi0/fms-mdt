@@ -43,6 +43,34 @@ export interface MdtDuty {
     driverName: string;
     targetRit: number | null;
     targetTon: number | null;
+    loading: MdtSite; // front loading rute
+    unloading: MdtSite; // dumping rute
+}
+
+export interface SiteZone {
+    id?: string;
+    kind: 'queue' | 'spot';
+    lat: number;
+    lng: number;
+    radius: number;
+}
+
+export interface MdtSite {
+    id: string;
+    name: string;
+    lat: number;
+    lng: number;
+    radius: number;
+    zones: SiteZone[];
+}
+
+/** Posisi unit (truk) dari alat GPS / tracker di unit itu. time = waktu GPS. */
+export interface MdtPosition {
+    lat: number;
+    lng: number;
+    angle: number | null; // arah hadap (derajat), null = nggak tahu
+    speed: number; // km/jam
+    time: number;
 }
 
 export interface MdtProduction {
@@ -69,6 +97,7 @@ export interface MdtBootstrap {
     delayCodes: DelayCode[];
     operators: MdtOperator[];
     current: UnitStatusLog | null;
+    position: MdtPosition | null; // posisi terakhir dari tracker unit (saat sync)
 }
 
 export interface MdtPairResponse {

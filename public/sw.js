@@ -11,14 +11,39 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE && k !== 'mdt-tiles-v1').map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
 
+// Tile peta OSM: yang pernah dibuka disimpan, jadi area front / dumping tetap kelihatan tanpa sinyal.
+const TILES = 'mdt-tiles-v1';
+const MAX_TILES = 300;
+
+async function cacheTile(req) {
+  const cache = await caches.open(TILES);
+  const hit = await cache.match(req);
+  if (hit) return hit;
+  try {
+    const res = await fetch(req);
+    if (res.ok || res.type === 'opaque') {
+      await cache.put(req, res.clone());
+      const keys = await cache.keys();
+      if (keys.length > MAX_TILES) await Promise.all(keys.slice(0, keys.length - MAX_TILES).map((k) => cache.delete(k)));
+    }
+    return res;
+  } catch {
+    return Response.error();
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
+  if (req.method === 'GET' && url.hostname.endsWith('tile.openstreetmap.org')) {
+    event.respondWith(cacheTile(req));
+    return;
+  }
   if (req.method !== 'GET' || url.origin !== self.location.origin) return; // API backend: langsung ke jaringan
 
   // Halaman: coba jaringan dulu (dapat versi terbaru), kalau gagal pakai yang tersimpan.
