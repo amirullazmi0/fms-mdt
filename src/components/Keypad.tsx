@@ -4,7 +4,7 @@ import { Delete } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Tombol angka besar: dipencet pakai sarung tangan, di kabin yang goyang. Tinggi tombol ikut
-// ruang yang ada (induknya harus flex/grid dengan tinggi terbatas), jadi layar nggak perlu scroll.
+// ruang yang ada (induknya harus flex/grid dengan tinggi terbatas), jadi layar tidak perlu di-scroll.
 export function Keypad({
     value, max, onChange, onSubmit, submitLabel, disabled, className,
 }: {

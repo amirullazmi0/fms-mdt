@@ -2,12 +2,12 @@ import { clsx } from 'clsx';
 import type { ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-// Gabung className Tailwind (yang belakangan menang kalau bentrok).
+// Gabung className Tailwind (yang belakangan menang bila bentrok).
 export function cn(...inputs: ClassValue[]): string {
     return twMerge(clsx(inputs));
 }
 
-/** uuid v4 (crypto.randomUUID cuma ada di konteks aman: https / localhost). */
+/** uuid v4 (crypto.randomUUID hanya ada di konteks aman: https / localhost). */
 export function uuid(): string {
     if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
     const b = crypto.getRandomValues(new Uint8Array(16));

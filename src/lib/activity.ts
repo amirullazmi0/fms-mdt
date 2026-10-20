@@ -1,4 +1,4 @@
-// Lagi ngapain unit & di mana, dari posisi terhadap front loading / dumping rute (plus zona antre /
+// Aktivitas unit & lokasinya, dari posisi terhadap front loading / dumping rute (plus zona antre /
 // spot) dan arah hadap. Logika sama dengan fms-supervisor src/lib/activity.ts.
 import type { MdtPosition, MdtSite, SiteZone } from './types';
 

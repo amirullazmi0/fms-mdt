@@ -1,5 +1,5 @@
-// IndexedDB kecil buat MDT: "kv" (data bootstrap, sesi, cache login) dan "outbox" (status yang
-// belum terkirim). Di kabin sering nggak ada sinyal, jadi semua status masuk outbox dulu.
+// IndexedDB kecil untuk MDT: "kv" (data bootstrap, sesi, cache login) dan "outbox" (status yang
+// belum terkirim). Di kabin sering tidak ada sinyal, jadi semua status masuk outbox terlebih dahulu.
 
 const DB_NAME = 'fms-mdt';
 const VERSION = 1;
@@ -45,7 +45,7 @@ export const kv = {
 
 /** Satu perubahan status yang ditekan operator, menunggu dikirim ke server. */
 export interface OutboxItem {
-    id: string; // uuid, juga id di server: kiriman ulang nggak dobel
+    id: string; // uuid, juga id di server: kiriman ulang tidak tercatat ganda
     driverId: string | null;
     delayCode: string;
     clientAt: number; // jam tablet saat ditekan

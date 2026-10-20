@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* MDT di kabin: selalu gelap, kontras tinggi (silau siang, gelap malam), huruf besar.
-   Font sistem: tablet sering offline, jadi nggak ambil font dari internet. */
+   Font sistem: tablet sering offline, jadi tidak mengambil font dari internet. */
 :root {
   --bg: #0b0d10;
   --panel: #16191e;
@@ -47,7 +47,7 @@
 }
 
 @layer base {
-  /* Selalu pas 1 layar: tinggi & lebar 100% viewport, nggak bisa scroll. Isi tiap layar diatur
+  /* Selalu tepat 1 layar: tinggi & lebar 100% viewport, tidak dapat di-scroll. Isi setiap layar diatur
      grid/flex supaya menyesuaikan, bukan memanjang. */
   html,
   body {
@@ -62,7 +62,7 @@
   body {
     @apply bg-bg font-sans text-fg antialiased;
     font-size: 17px;
-    /* Jangan ada zoom/geser nggak sengaja waktu tangan goyang. */
+    /* Cegah zoom/geser tidak sengaja saat tangan goyang. */
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;

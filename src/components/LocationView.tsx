@@ -1,6 +1,6 @@
 'use client';
-// Lokasi unit (truk) di MDT, dari alat GPS (tracker) di unit itu, bukan dari tablet. Skema
-// front loading ●──🚚──● dumping selalu tampil; peta muncul kalau ada sinyal (tile yang pernah dibuka
+// Lokasi unit di MDT, dari alat GPS (tracker) di unit tersebut, bukan dari tablet. Skema
+// front loading ●──🚚──● dumping selalu tampil; peta muncul bila ada sinyal (tile yang pernah dibuka
 // disimpan service worker). Tanpa sinyal: posisi terakhir yang diterima, ditandai jam datanya.
 import { LocateFixed, MapPin, Navigation, Route, Satellite, Truck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -79,8 +79,8 @@ export function LocationView({
                 <p className="rounded-2xl bg-panel p-4 text-muted">Unit belum ada penugasan rute, jadi posisi front & dumping belum diketahui.</p>
             )}
 
-            {/* Peta: titik loading & dumping + radiusnya, zona antre / spot, dan unit. Tanpa sinyal
-                tile bisa kosong, tapi titik, radius & unit tetap kelihatan. */}
+            {/* Peta: front loading & dumping + radiusnya, zona antre / spot, dan unit. Tanpa sinyal
+                tile bisa kosong, tetapi titik, radius & unit tetap terlihat. */}
             <div className="relative min-h-0 overflow-hidden rounded-2xl bg-panel">
                 {pos || (from && to) ? (
                     <MiniMap pos={pos} from={from} to={to} />
@@ -195,7 +195,7 @@ function MiniMap({ pos, from, to }: { pos: MdtPosition | null; from?: MdtSite; t
             map.current = null;
             unit.current = null;
         };
-        // peta dibuat ulang hanya kalau rutenya ganti; posisi unit digeser di effect bawah
+        // peta dibuat ulang hanya bila rutenya berganti; posisi unit digeser di effect bawah
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [from?.id, to?.id, from?.radius, to?.radius]);
 

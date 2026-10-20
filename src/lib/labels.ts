@@ -19,7 +19,7 @@ export const STATUS_LABEL: Record<UnitStatus, string> = {
 
 export type Tone = 'working' | 'planned' | 'unplanned' | 'breakdown';
 
-// Kelas warna per kategori (gelap, kontras tinggi buat di kabin).
+// Kelas warna per kategori (gelap, kontras tinggi untuk di kabin).
 export const TONE: Record<Tone, { solid: string; soft: string; ring: string; text: string }> = {
     working: { solid: 'bg-emerald-500 text-emerald-950', soft: 'bg-emerald-500/15 text-emerald-300', ring: 'ring-emerald-400', text: 'text-emerald-400' },
     planned: { solid: 'bg-sky-500 text-sky-950', soft: 'bg-sky-500/15 text-sky-300', ring: 'ring-sky-400', text: 'text-sky-400' },

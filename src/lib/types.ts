@@ -64,11 +64,11 @@ export interface MdtSite {
     zones: SiteZone[];
 }
 
-/** Posisi unit (truk) dari alat GPS / tracker di unit itu. time = waktu GPS. */
+/** Posisi unit dari alat GPS / tracker di unit tersebut. time = waktu GPS. */
 export interface MdtPosition {
     lat: number;
     lng: number;
-    angle: number | null; // arah hadap (derajat), null = nggak tahu
+    angle: number | null; // arah hadap (derajat), null = tidak diketahui
     speed: number; // km/jam
     time: number;
 }

@@ -4,7 +4,7 @@ import { CloudOff, CloudUpload, RefreshCw, Wifi } from 'lucide-react';
 import { ago, clock } from '@/lib/labels';
 import { cn } from '@/lib/utils';
 
-// Indikator sinkron: berapa status belum terkirim, kapan terakhir sync, ada sinyal atau nggak.
+// Indikator sinkron: berapa status belum terkirim, kapan terakhir sync, ada sinyal atau tidak.
 export function SyncBadge({
     online, pending, lastSync, syncing, onSync, now,
 }: {

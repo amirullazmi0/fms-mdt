@@ -40,7 +40,7 @@ export function useMdt() {
         patch({ phase: 'pair', bootstrap: null, operator: null });
     }, [patch]);
 
-    /** Kirim outbox, lalu ambil data terbaru. Aman dipanggil kapan saja (nggak jalan dobel). */
+    /** Kirim outbox, lalu ambil data terbaru. Aman dipanggil kapan saja (tidak berjalan ganda). */
     const sync = useCallback(async () => {
         if (busy.current || !(await kv.get<string>(TOKEN_KEY))) return;
         busy.current = true;
@@ -56,7 +56,7 @@ export function useMdt() {
             const now = Date.now();
             await kv.set(LAST_SYNC_KEY, now);
             const pending = await outbox.count();
-            // Nggak ada status lokal yang nunggu: ikut status di server (mis. diubah supervisor).
+            // Tidak ada status lokal yang menunggu: ikuti status di server (mis. diubah supervisor).
             if (pending === 0 && b.current?.delayCode) {
                 const code = b.delayCodes.find((c) => c.code === b.current!.delayCode);
                 if (code) {
@@ -75,7 +75,7 @@ export function useMdt() {
         }
     }, [patch, unpair]);
 
-    // Mulai: baca semua dari IndexedDB dulu (jalan tanpa sinyal), lalu coba sync.
+    // Mulai: baca semua dari IndexedDB terlebih dahulu (berjalan tanpa sinyal), lalu coba sync.
     useEffect(() => {
         let alive = true;
         (async () => {
@@ -114,7 +114,7 @@ export function useMdt() {
         return r;
     }, [patch, sync]);
 
-    /** Login NIK + PIN: online kalau bisa, kalau nggak ada sinyal pakai cache login tablet ini. */
+    /** Login NIK + PIN: online bila memungkinkan, bila tidak ada sinyal memakai cache login tablet ini. */
     const login = useCallback(async (employeeNo: string, pin: string): Promise<string | null> => {
         let op: MdtOperator | null = null;
         try {

@@ -1,5 +1,5 @@
 'use client';
-// Beranda MDT: selalu 1 layar penuh (100dvh × 100dvw), nggak bisa scroll. Isi menyesuaikan tinggi
+// Beranda MDT: selalu 1 layar penuh (100dvh × 100dvw), tidak dapat di-scroll. Isi menyesuaikan tinggi
 // layar lewat grid `fr` + `min-h-0` dan ukuran huruf clamp().
 import { ArrowRight, LayoutGrid, LogOut, MapPin, Navigation, Timer, TrendingUp } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
@@ -41,7 +41,7 @@ export function HomeScreen({
     const [tab, setTab] = useState<DelayCategory>(current?.category ?? 'working');
     const [confirm, setConfirm] = useState<DelayCode | null>(null);
     const [askLogout, setAskLogout] = useState(false);
-    // Posisi unit (truk) dari alat GPS-nya, bukan dari tablet.
+    // Posisi unit dari alat GPS-nya, bukan dari tablet.
     const pos = useUnitPosition(bootstrap?.position ?? null);
     const byCategory = useMemo(() => {
         const m: Record<DelayCategory, DelayCode[]> = { working: [], standby_planned: [], standby_unplanned: [], breakdown: [] };
@@ -59,7 +59,7 @@ export function HomeScreen({
 
     const press = (c: DelayCode) => {
         if (c.code === current?.delayCode) return;
-        // Breakdown berhenti produksi: minta konfirmasi biar nggak kepencet.
+        // Breakdown menghentikan produksi: minta konfirmasi agar tidak tertekan tanpa sengaja.
         if (c.category === 'breakdown') setConfirm(c);
         else onStatus(c);
     };
@@ -100,7 +100,7 @@ export function HomeScreen({
             </header>
 
             <div className="grid min-h-0 grid-cols-1 gap-3 md:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]">
-                {/* Ringkasan kiri: status, penugasan, produksi. Dipadatkan biar muat. HP: disembunyikan. */}
+                {/* Ringkasan kiri: status, penugasan, produksi. Dipadatkan agar muat. HP: disembunyikan. */}
                 <aside className="hidden min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] gap-3 md:grid">
                     <section className={cn('rounded-2xl p-4 ring-2', tone ? `${tone.soft} ${tone.ring}` : 'bg-panel ring-line')}>
                         <p className="text-xs font-semibold uppercase tracking-wide opacity-80">Status sekarang</p>
@@ -201,7 +201,7 @@ export function HomeScreen({
             {confirm && (
                 <Confirm
                     title={`Lapor ${confirm.name}?`}
-                    body="Unit dianggap breakdown dan berhenti produksi sampai status diganti. Dispatcher & mekanik dapat info saat ada sinyal."
+                    body="Unit dianggap breakdown dan berhenti produksi sampai status diganti. Dispatcher & mekanik menerima informasi saat ada sinyal."
                     yes="Ya, unit breakdown"
                     danger
                     onYes={() => {

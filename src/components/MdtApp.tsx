@@ -1,6 +1,6 @@
 'use client';
 // Alur MDT: pasangkan tablet ke unit → login operator (NIK + PIN) → beranda status.
-// Semua data dibaca dari IndexedDB dulu, jadi tetap jalan di pit / tongkang tanpa sinyal.
+// Semua data dibaca dari IndexedDB terlebih dahulu, jadi tetap berjalan di pit / tongkang tanpa sinyal.
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -12,7 +12,7 @@ import { PairScreen } from './PairScreen';
 export default function MdtApp() {
     const m = useMdt();
 
-    // Service worker: simpan app di tablet supaya tetap kebuka tanpa sinyal (cuma build produksi).
+    // Service worker: simpan app di tablet agar tetap dapat dibuka tanpa sinyal (hanya build produksi).
     useEffect(() => {
         if (process.env.NODE_ENV !== 'production' || !('serviceWorker' in navigator)) return;
         navigator.serviceWorker.register('/sw.js').catch(() => {});

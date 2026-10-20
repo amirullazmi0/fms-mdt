@@ -23,7 +23,7 @@ export function useUnitPosition(initial: MdtPosition | null): MdtPosition | null
                 setPos(p);
                 await kv.set(KEY, p);
             } catch {
-                // nggak ada sinyal: tetap pakai posisi terakhir
+                // tidak ada sinyal: tetap memakai posisi terakhir
             }
         };
         void load();

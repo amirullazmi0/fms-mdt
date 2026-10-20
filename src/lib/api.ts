@@ -3,7 +3,7 @@ import { kv } from './db';
 import type { ApiEnvelope } from './types';
 
 // Token tablet (didapat waktu pairing) dikirim sebagai Bearer. Bukan token user: tablet
-// nempel ke satu unit, operator cuma ganti-gantian login di atasnya.
+// terpasang di satu unit, operator hanya bergantian login di atasnya.
 export const TOKEN_KEY = 'tablet.token';
 
 const api = axios.create({
@@ -27,7 +27,7 @@ export async function post<T>(url: string, body: unknown): Promise<T> {
     return res.data.data;
 }
 
-/** Nggak ada sinyal / server nggak kejangkau (bukan ditolak server). */
+/** Tidak ada sinyal / server tidak terjangkau (bukan ditolak server). */
 export function isOffline(err: unknown): boolean {
     const e = err as AxiosError;
     return !!e?.isAxiosError && !e.response;
@@ -38,7 +38,7 @@ export function isUnpaired(err: unknown): boolean {
     return (err as AxiosError)?.response?.status === 401;
 }
 
-export function errText(err: unknown, fallback = 'Gagal, coba lagi'): string {
+export function errText(err: unknown, fallback = 'Gagal, silakan coba kembali'): string {
     const e = err as AxiosError<{ message?: string; error?: unknown }>;
     if (isOffline(err)) return 'Di luar jangkauan sinyal';
     const data = e?.response?.data;

@@ -3,7 +3,7 @@ import type { MdtOperator } from './types';
 
 // Login offline: setelah operator sekali login online di tablet ini, PIN-nya disimpan sebagai
 // hash PBKDF2 (bukan PIN asli, bukan hash dari server). Di pit tanpa sinyal operator tetap bisa
-// login pakai NIK + PIN yang sama. Operator yang belum pernah login di tablet ini harus online dulu.
+// login memakai NIK + PIN yang sama. Operator yang belum pernah login di tablet ini harus online terlebih dahulu.
 
 const KEY = 'login.cache';
 const ITERATIONS = 150_000;
