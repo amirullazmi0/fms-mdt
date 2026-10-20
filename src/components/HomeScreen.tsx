@@ -13,6 +13,11 @@ import { SyncBadge } from './SyncBadge';
 
 type View = 'status' | 'lokasi';
 
+const SHIFT_TONE: Record<string, string> = {
+    active: 'bg-emerald-500/15 text-emerald-300',
+    finishing: 'bg-amber-500/15 text-amber-300',
+};
+
 function useNow(every = 1000) {
     const [now, setNow] = useState(() => Date.now());
     useEffect(() => {
@@ -122,10 +127,15 @@ export function HomeScreen({
                             <>
                                 <p className="flex items-center justify-between gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
                                     <span className="truncate">{duty.shiftName} · Fleet {duty.routeName}</span>
-                                    <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 normal-case', duty.shiftStatus === 'active' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-panel-2')}>
-                                        {duty.shiftStatus === 'active' ? 'Berjalan' : `Mulai ${clock(duty.plannedStart)}`}
+                                    <span className={cn('shrink-0 rounded-md px-1.5 py-0.5 normal-case', SHIFT_TONE[duty.shiftStatus] ?? 'bg-panel-2')}>
+                                        {duty.shiftStatus === 'active' ? 'Berjalan' : duty.shiftStatus === 'finishing' ? 'Shift ditutup' : `Mulai ${clock(duty.plannedStart)}`}
                                     </span>
                                 </p>
+                                {duty.shiftStatus === 'finishing' && (
+                                    <p className="mt-1.5 rounded-lg bg-amber-500/15 px-2 py-1 text-sm font-semibold text-amber-300">
+                                        Selesaikan ritase terakhir: lanjut ke dumping dan selesaikan dumping, lalu keluar dari area dumping.
+                                    </p>
+                                )}
                                 <p className="mt-1.5 flex min-w-0 items-center gap-1.5 font-semibold">
                                     <MapPin className="size-4 shrink-0 text-emerald-400" /> <span className="truncate">{duty.loadingName}</span>
                                     <ArrowRight className="size-4 shrink-0 text-muted" />

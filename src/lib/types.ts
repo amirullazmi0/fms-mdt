@@ -31,7 +31,8 @@ export interface MdtDuty {
     assignmentId: string;
     shiftId: string;
     shiftName: string;
-    shiftStatus: 'planned' | 'active';
+    /** finishing = shift sudah ditutup, ritase terakhir (hauling / dumping) belum selesai. */
+    shiftStatus: 'planned' | 'active' | 'finishing';
     plannedStart: number;
     plannedEnd: number;
     startedAt: number | null;
