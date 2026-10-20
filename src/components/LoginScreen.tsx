@@ -8,6 +8,9 @@ import { cn } from '@/lib/utils';
 import { Keypad } from './Keypad';
 import { SyncBadge } from './SyncBadge';
 
+// Operator yang tampil sebagai pilihan cepat (sisanya cukup ketik NIK). Dibatasi supaya muat 1 layar.
+const MAX_CHIPS = 6;
+
 export function LoginScreen({
     bootstrap, online, pending, lastSync, onLogin,
 }: {
@@ -23,7 +26,9 @@ export function LoginScreen({
     const [busy, setBusy] = useState(false);
     const duty = bootstrap?.duty;
     // Operator yang dijadwalkan di unit ini muncul paling depan.
-    const operators = [...(bootstrap?.operators ?? [])].sort((a, b) => Number(b.id === duty?.driverId) - Number(a.id === duty?.driverId));
+    const operators = [...(bootstrap?.operators ?? [])]
+        .sort((a, b) => Number(b.id === duty?.driverId) - Number(a.id === duty?.driverId))
+        .slice(0, MAX_CHIPS);
 
     const submit = async () => {
         if (!employeeNo.trim() || pin.length < 4 || busy) return;
@@ -38,42 +43,36 @@ export function LoginScreen({
     };
 
     return (
-        <main className="mx-auto flex min-h-full max-w-5xl flex-col gap-6 p-6">
+        <main className="mx-auto grid h-dvh w-full max-w-6xl grid-rows-[auto_minmax(0,1fr)] gap-4 overflow-hidden p-4">
             <header className="flex items-center justify-between gap-4">
-                <div>
-                    <p className="text-sm font-semibold uppercase tracking-wide text-muted">
-                        {UNIT_TYPE[bootstrap?.unit.unitType ?? 'DT'] ?? 'Unit'}
-                    </p>
-                    <h1 className="text-3xl font-bold">{bootstrap?.unit.label ?? 'Unit'}</h1>
+                <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">{UNIT_TYPE[bootstrap?.unit.unitType ?? 'DT'] ?? 'Unit'}</p>
+                    <h1 className="truncate text-[clamp(1.5rem,3.6vh,2.25rem)] font-bold leading-tight">{bootstrap?.unit.label ?? 'Unit'}</h1>
                 </div>
                 <SyncBadge online={online} pending={pending} lastSync={lastSync} />
             </header>
 
-            <div className="grid flex-1 gap-8 lg:grid-cols-2">
-                <section>
-                    <h2 className="flex items-center gap-2 text-2xl font-bold">
-                        <HardHat className="size-7 text-brand" /> Login Operator
+            <div className="grid min-h-0 gap-4 md:grid-cols-2 md:gap-8">
+                <section className="flex min-h-0 flex-col overflow-hidden">
+                    <h2 className="flex items-center gap-2 text-xl font-bold">
+                        <HardHat className="size-6 text-brand" /> Login Operator
                     </h2>
-                    {duty ? (
-                        <p className="mt-2 text-lg text-muted">
-                            {duty.shiftName} · {duty.routeName}. Operator terjadwal: <b className="text-fg">{duty.driverName}</b>
-                        </p>
-                    ) : (
-                        <p className="mt-2 text-lg text-muted">Unit belum ada penugasan shift.</p>
-                    )}
-                    <label className="mt-6 block">
-                        <span className="text-sm font-semibold uppercase tracking-wide text-muted">NIK</span>
+                    <p className="mt-1 truncate text-muted">
+                        {duty ? <>{duty.shiftName} · {duty.routeName} · terjadwal: <b className="text-fg">{duty.driverName}</b></> : 'Unit belum ada penugasan shift.'}
+                    </p>
+                    <label className="mt-3 block">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted">NIK</span>
                         <input
                             value={employeeNo}
                             onChange={(e) => setEmployeeNo(e.target.value)}
                             maxLength={30}
                             autoComplete="off"
                             placeholder="Nomor induk karyawan"
-                            className="mt-2 h-16 w-full rounded-xl border border-line bg-panel px-4 text-2xl font-semibold outline-none focus:ring-2 focus:ring-brand"
+                            className="mt-1 h-14 w-full rounded-xl border border-line bg-panel px-4 text-2xl font-semibold outline-none focus:ring-2 focus:ring-brand"
                         />
                     </label>
                     {operators.length > 0 && (
-                        <div className="mt-4 flex max-h-56 flex-wrap gap-2 overflow-y-auto">
+                        <div className="mt-3 grid min-h-0 grid-cols-2 content-start gap-2 overflow-hidden">
                             {operators.map((o) => (
                                 <button
                                     key={o.id}
@@ -81,25 +80,24 @@ export function LoginScreen({
                                     onClick={() => setEmployeeNo(o.employeeNo ?? '')}
                                     disabled={!o.employeeNo}
                                     className={cn(
-                                        'min-h-14 rounded-xl border px-4 text-left transition active:scale-95',
+                                        'min-h-14 min-w-0 rounded-xl border px-3 text-left transition active:scale-95',
                                         o.employeeNo && o.employeeNo === employeeNo ? 'border-brand bg-brand/15' : 'border-line bg-panel',
                                     )}
                                 >
-                                    <span className="block font-semibold">{o.name}</span>
-                                    <span className="block text-sm text-muted">{o.employeeNo ?? 'tanpa NIK'}</span>
+                                    <span className="block truncate font-semibold">{o.name}</span>
+                                    <span className="block truncate text-sm text-muted">{o.employeeNo ?? 'tanpa NIK'}</span>
                                 </button>
                             ))}
                         </div>
                     )}
                 </section>
 
-                <section className="w-full max-w-sm justify-self-center">
-                    <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">PIN</p>
-                    <div className="mb-4 flex h-16 items-center justify-center gap-3 rounded-xl border-2 border-line bg-panel">
-                        {pin ? pin.split('').map((_, i) => <span key={i} className="size-4 rounded-full bg-fg" />) : <span className="text-muted">4–8 angka</span>}
+                <section className="flex min-h-0 flex-col gap-3">
+                    <div className="flex h-14 shrink-0 items-center justify-center gap-3 rounded-xl border-2 border-line bg-panel">
+                        {pin ? pin.split('').map((_, i) => <span key={i} className="size-4 rounded-full bg-fg" />) : <span className="text-muted">PIN 4–8 angka</span>}
                     </div>
-                    {error && <p className="mb-3 rounded-xl bg-red-500/15 p-3 text-center font-medium text-red-300">{error}</p>}
-                    <Keypad value={pin} max={8} onChange={setPin} onSubmit={submit} submitLabel={busy ? 'Masuk…' : 'Masuk'} disabled={busy} />
+                    {error && <p className="shrink-0 rounded-xl bg-red-500/15 p-2 text-center font-medium text-red-300">{error}</p>}
+                    <Keypad className="flex-1" value={pin} max={8} onChange={setPin} onSubmit={submit} submitLabel={busy ? 'Masuk…' : 'Masuk'} disabled={busy} />
                 </section>
             </div>
         </main>

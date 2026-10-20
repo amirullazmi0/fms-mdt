@@ -20,7 +20,7 @@ export default function MdtApp() {
 
     if (m.phase === 'loading') {
         return (
-            <main className="grid min-h-full place-items-center">
+            <main className="grid h-dvh w-dvw place-items-center overflow-hidden">
                 <Loader2 className="size-12 animate-spin text-muted" aria-label="Memuat" />
             </main>
         );

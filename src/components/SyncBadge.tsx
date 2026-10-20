@@ -28,7 +28,7 @@ export function SyncBadge({
             title="Sinkron sekarang"
         >
             <Icon className={cn('size-6 shrink-0', syncing && 'animate-spin', !online ? 'text-amber-300' : pending ? 'text-sky-300' : 'text-emerald-400')} />
-            <span className="leading-tight">
+            <span className="hidden leading-tight lg:block">
                 <span className="block font-semibold">
                     {!online ? 'Di luar jangkauan sinyal' : pending > 0 ? `Belum terkirim: ${pending}` : 'Tersinkron'}
                 </span>

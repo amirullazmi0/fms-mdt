@@ -27,10 +27,37 @@
   --color-brand-foreground: var(--brand-foreground);
 }
 
+/* Label titik & zona di peta MDT (selalu tampil): gelap, huruf jelas. */
+.leaflet-tooltip.mdt-tip {
+  background: rgb(11 13 16 / 0.88);
+  color: #f4f5f7;
+  border: 0;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font: 600 12px/1.3 ui-sans-serif, system-ui, sans-serif;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
+}
+.leaflet-tooltip.mdt-tip::before {
+  display: none;
+}
+.leaflet-tooltip.mdt-tip-sm {
+  font-size: 11px;
+  font-weight: 500;
+  background: rgb(11 13 16 / 0.7);
+}
+
 @layer base {
+  /* Selalu pas 1 layar: tinggi & lebar 100% viewport, nggak bisa scroll. Isi tiap layar diatur
+     grid/flex supaya menyesuaikan, bukan memanjang. */
   html,
   body {
-    height: 100%;
+    height: 100dvh;
+    width: 100dvw;
+    max-height: 100dvh;
+    max-width: 100dvw;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
   }
   body {
     @apply bg-bg font-sans text-fg antialiased;
