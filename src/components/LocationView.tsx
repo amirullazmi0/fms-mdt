@@ -1,6 +1,6 @@
 'use client';
 // Lokasi unit di MDT, dari alat GPS (tracker) di unit tersebut, bukan dari tablet. Skema
-// front loading ●──🚚──● dumping selalu tampil; peta muncul bila ada sinyal (tile yang pernah dibuka
+// pit ●──🚚──● dumping selalu tampil; peta muncul bila ada sinyal (tile yang pernah dibuka
 // disimpan service worker). Tanpa sinyal: posisi terakhir yang diterima, ditandai jam datanya.
 import { LocateFixed, MapPin, Navigation, Route, Satellite, Truck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -51,7 +51,7 @@ export function LocationView({
                 </div>
             </div>
 
-            {/* Skema rute: front loading → dumping */}
+            {/* Skema rute: pit → stockpile / jetty */}
             {from && to ? (
                 <div className="rounded-2xl bg-panel px-5 py-4">
                     <div className="relative mx-3 h-10">
@@ -67,19 +67,19 @@ export function LocationView({
                     <div className="mt-2 flex justify-between gap-4 text-sm">
                         <span className="min-w-0">
                             <b className="block truncate text-base">{from.name}</b>
-                            <span className="text-muted">Front loading · r {from.radius} m{pos ? ` · ${where(pos, from)}` : ''}</span>
+                            <span className="text-muted">Pit · r {from.radius} m{pos ? ` · ${where(pos, from)}` : ''}</span>
                         </span>
                         <span className="min-w-0 text-right">
                             <b className="block truncate text-base">{to.name}</b>
-                            <span className="text-muted">Dumping · r {to.radius} m{pos ? ` · ${where(pos, to)}` : ''}</span>
+                            <span className="text-muted">Stockpile / jetty · r {to.radius} m{pos ? ` · ${where(pos, to)}` : ''}</span>
                         </span>
                     </div>
                 </div>
             ) : (
-                <p className="rounded-2xl bg-panel p-4 text-muted">Unit belum ada penugasan rute, jadi posisi front & dumping belum diketahui.</p>
+                <p className="rounded-2xl bg-panel p-4 text-muted">Unit belum ada penugasan rute, jadi posisi pit & stockpile / jetty belum diketahui.</p>
             )}
 
-            {/* Peta: front loading & dumping + radiusnya, zona antre / spot, dan unit. Tanpa sinyal
+            {/* Peta: pit & stockpile / jetty + radiusnya, zona antre / spot, dan unit. Tanpa sinyal
                 tile bisa kosong, tetapi titik, radius & unit tetap terlihat. */}
             <div className="relative min-h-0 overflow-hidden rounded-2xl bg-panel">
                 {pos || (from && to) ? (
@@ -128,7 +128,7 @@ function unitPin(angle: number | null): string {
     return `<div style="position:relative;width:34px;height:34px">${arrow}<div style="width:34px;height:34px;border-radius:50%;background:#ffc928;border:3px solid #0b0d10;box-shadow:0 0 0 5px rgb(255 201 40/.35);display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b0d10" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div></div>`;
 }
 
-// Peta Leaflet: front loading (hijau, L) & dumping (oranye, D) dengan lingkaran radius yang jelas,
+// Peta Leaflet: pit (hijau, L) & dumping (oranye, D) dengan lingkaran radius yang jelas,
 // zona antre / spot (putus-putus), dan unit (panah = arah hadap). Leaflet di-load di browser saja.
 function MiniMap({ pos, from, to }: { pos: MdtPosition | null; from?: MdtSite; to?: MdtSite }) {
     const el = useRef<HTMLDivElement>(null);
@@ -179,8 +179,8 @@ function MiniMap({ pos, from, to }: { pos: MdtPosition | null; from?: MdtSite; t
                         .addTo(m);
                 }
             };
-            if (from) site(from, LOADING, 'L', 'Front loading');
-            if (to) site(to, DUMPING, 'D', 'Dumping');
+            if (from) site(from, LOADING, 'P', 'Pit');
+            if (to) site(to, DUMPING, 'S', 'Stockpile / jetty');
             if (pos) {
                 unit.current = leaflet
                     .marker([pos.lat, pos.lng], { icon: leaflet.divIcon({ className: '', iconSize: [34, 34], iconAnchor: [17, 17], html: unitPin(pos.angle) }), zIndexOffset: 1000 })
@@ -215,8 +215,8 @@ function MiniMap({ pos, from, to }: { pos: MdtPosition | null; from?: MdtSite; t
             <div ref={el} className="h-full w-full bg-[#1b1f26]" aria-label="Peta lokasi unit" />
             {/* Legenda */}
             <div className="absolute left-2 top-2 z-[1000] flex flex-col gap-1 rounded-xl bg-bg/85 px-3 py-2 text-xs backdrop-blur">
-                {from && <span className="flex items-center gap-2"><i className="size-3 rounded-full" style={{ background: LOADING }} /> L · Front loading · r {from.radius} m</span>}
-                {to && <span className="flex items-center gap-2"><i className="size-3 rounded-full" style={{ background: DUMPING }} /> D · Dumping · r {to.radius} m</span>}
+                {from && <span className="flex items-center gap-2"><i className="size-3 rounded-full" style={{ background: LOADING }} /> P · Pit · r {from.radius} m</span>}
+                {to && <span className="flex items-center gap-2"><i className="size-3 rounded-full" style={{ background: DUMPING }} /> S · Stockpile / jetty · r {to.radius} m</span>}
                 {[from, to].some((s) => s?.zones.length) && (
                     <span className="flex items-center gap-2 text-muted"><i className="size-3 rounded-full border-2 border-dashed" style={{ borderColor: ZONE.queue }} /> antre <i className="size-3 rounded-full border-2 border-dashed" style={{ borderColor: ZONE.spot }} /> spot</span>
                 )}

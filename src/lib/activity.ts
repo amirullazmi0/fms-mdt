@@ -1,4 +1,4 @@
-// Aktivitas unit & lokasinya, dari posisi terhadap front loading / dumping rute (plus zona antre /
+// Aktivitas unit & lokasinya, dari posisi terhadap pit / stockpile / jetty rute (plus zona antre /
 // spot) dan arah hadap. Logika sama dengan fms-supervisor src/lib/activity.ts.
 import type { MdtPosition, MdtSite, SiteZone } from './types';
 
@@ -67,7 +67,7 @@ export function activityOf(p: MdtPosition | null, from: MdtSite | undefined, to:
         : { kind: 'return', label: `Return → ${from.name}`, detail: `${km(toL)} lagi` };
 }
 
-/** Posisi unit di antara front loading (0) dan dumping (1). */
+/** Posisi unit di antara pit (0) dan dumping (1). */
 export function progressOf(p: MdtPosition | null, from: MdtSite | undefined, to: MdtSite | undefined): number | null {
     if (!p || !from || !to) return null;
     const a = distanceM(p, from);

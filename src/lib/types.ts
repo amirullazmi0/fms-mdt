@@ -44,7 +44,7 @@ export interface MdtDuty {
     driverName: string;
     targetRit: number | null;
     targetTon: number | null;
-    loading: MdtSite; // front loading rute
+    loading: MdtSite; // pit rute
     unloading: MdtSite; // dumping rute
 }
 

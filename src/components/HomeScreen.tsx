@@ -131,7 +131,7 @@ export function HomeScreen({
                                 </p>
                                 {duty.shiftStatus === 'finishing' && (
                                     <p className="mt-1.5 rounded-lg bg-amber-500/15 px-2 py-1 text-sm font-semibold text-amber-300">
-                                        Selesaikan ritase terakhir: lanjut ke dumping dan selesaikan dumping, lalu keluar dari area dumping.
+                                        Selesaikan ritase terakhir: bila belum muat, muat dulu di pit; lanjut ke stockpile / jetty dan selesaikan dumping, lalu keluar dari area stockpile / jetty.
                                     </p>
                                 )}
                                 <p className="mt-1.5 flex min-w-0 items-center gap-1.5 font-semibold">
