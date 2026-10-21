@@ -3,7 +3,9 @@ FROM node:22-alpine AS dependencies
 WORKDIR /app
 RUN corepack enable
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+# The VPS link to the npm registry is slow: allow a long download (default timeout is 30 s,
+# big packages like next / lucide-react time out) and fewer parallel downloads.
+RUN yarn install --frozen-lockfile --network-timeout 600000 --network-concurrency 4
 
 FROM node:22-alpine AS builder
 
